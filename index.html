@@ -5,19 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Yukthi M — Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<script>
+  // Apply theme ASAP to avoid a flash of the wrong theme.
+  (() => {
+    try {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = stored === 'light' || stored === 'dark' ? stored : (prefersDark ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+    } catch {
+      // Ignore (e.g., privacy mode).
+    }
+  })();
+</script>
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --card: #16161f;
-    --border: #23232e;
-    --accent: #7c6af7;
-    --accent2: #38d9c0;
-    --accent3: #f7c26a;
-    --text: #e8e8f0;
-    --muted: #7a7a96;
-    --grad1: linear-gradient(135deg, #7c6af7 0%, #38d9c0 100%);
-    --grad2: linear-gradient(135deg, #f7c26a 0%, #f76a8a 100%);
+    color-scheme: dark;
+    --bg: #070b14;
+    --surface: #0b1020;
+    --card: #0f172a;
+    --border: #22304e;
+    --accent: #5b8cff;
+    --accent2: #2de3c1;
+    --accent3: #ffb86b;
+    --text: #e9eeff;
+    --muted: #96a0c6;
+    --grad1: linear-gradient(135deg, #5b8cff 0%, #2de3c1 100%);
+    --grad2: linear-gradient(135deg, #ffb86b 0%, #ff5c93 100%);
+    --nav-bg: rgba(7,11,20,0.78);
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f7f8ff;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --border: #d6dcec;
+    --text: #0b1020;
+    --muted: #4d5a7a;
+    --nav-bg: rgba(247,248,255,0.78);
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
   }
  
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,6 +60,9 @@
     font-family: 'DM Sans', sans-serif;
     font-weight: 400;
     line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
  
@@ -37,17 +70,17 @@
   body::before {
     content: '';
     position: fixed; inset: 0; z-index: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
     pointer-events: none;
   }
  
   /* ── GLOWING BLOBS ── */
   .blob {
-    position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0;
+    position: fixed; border-radius: 50%; filter: blur(110px); pointer-events: none; z-index: 0;
   }
-  .blob-1 { width: 500px; height: 500px; background: rgba(124,106,247,0.12); top: -100px; right: -100px; animation: drift 18s ease-in-out infinite alternate; }
-  .blob-2 { width: 400px; height: 400px; background: rgba(56,217,192,0.08); bottom: 200px; left: -150px; animation: drift 22s ease-in-out infinite alternate-reverse; }
-  .blob-3 { width: 300px; height: 300px; background: rgba(247,194,106,0.07); top: 50%; left: 40%; animation: drift 15s ease-in-out infinite alternate; }
+  .blob-1 { width: 500px; height: 500px; background: rgba(91,140,255,0.10); top: -100px; right: -100px; animation: drift 26s ease-in-out infinite alternate; }
+  .blob-2 { width: 400px; height: 400px; background: rgba(45,227,193,0.07); bottom: 200px; left: -150px; animation: drift 28s ease-in-out infinite alternate-reverse; }
+  .blob-3 { width: 300px; height: 300px; background: rgba(255,184,107,0.06); top: 50%; left: 40%; animation: drift 24s ease-in-out infinite alternate; }
  
   @keyframes drift {
     from { transform: translate(0, 0) scale(1); }
@@ -59,25 +92,117 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem 3rem;
-    background: rgba(10,10,15,0.75);
+    background: var(--nav-bg);
     backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--border);
+    gap: 1.25rem;
   }
+
+  section[id] { scroll-margin-top: 96px; }
  
   .nav-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
     font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 1.4rem;
-    background: var(--grad1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    font-size: 1.4rem;
     letter-spacing: -0.02em;
   }
+
+  .nav-logo img {
+    height: 34px;
+    width: auto;
+    display: block;
+    border-radius: 10px;
+  }
  
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2rem);
+    list-style: none;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
   .nav-links a {
     color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
     letter-spacing: 0.08em; text-transform: uppercase;
     transition: color 0.25s;
+    white-space: nowrap;
   }
   .nav-links a:hover { color: var(--accent2); }
+
+  /* ── THEME SWITCH ── */
+  .theme-switch {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    flex-shrink: 0;
+  }
+
+  :root[data-theme="light"] .theme-switch {
+    background: rgba(11,16,32,0.03);
+  }
+
+  .theme-switch__text {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    user-select: none;
+  }
+
+  .theme-switch__toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .theme-switch__input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .theme-switch__track {
+    width: 44px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .theme-switch__track::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--grad1);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    transition: transform 0.22s ease;
+  }
+
+  .theme-switch__input:checked + .theme-switch__track::after {
+    transform: translate(20px, -50%);
+  }
+
+  .theme-switch__input:focus-visible + .theme-switch__track {
+    outline: 2px solid var(--accent2);
+    outline-offset: 3px;
+  }
  
   /* ── SECTIONS ── */
   section { position: relative; z-index: 1; }
@@ -95,8 +220,8 @@
   .hero-badge {
     display: inline-flex; align-items: center; gap: 0.5rem;
     padding: 0.35rem 1rem; border-radius: 999px;
-    border: 1px solid rgba(124,106,247,0.4);
-    background: rgba(124,106,247,0.08);
+    border: 1px solid rgba(91,140,255,0.42);
+    background: rgba(91,140,255,0.09);
     font-size: 0.78rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase;
     margin-bottom: 2rem;
     animation: fadeUp 0.6s ease both;
@@ -125,6 +250,15 @@
     display: flex; align-items: center; justify-content: center;
     font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800;
     color: var(--accent);
+    overflow: hidden;
+  }
+
+  .avatar-inner img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 50%;
   }
  
   .hero-name {
@@ -163,12 +297,19 @@
     transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
   }
   .btn:hover { transform: translateY(-2px); }
+
+  .btn:focus-visible,
+  .proj-btn:focus-visible,
+  .nav-links a:focus-visible {
+    outline: 2px solid var(--accent2);
+    outline-offset: 3px;
+  }
  
   .btn-primary {
     background: var(--grad1); color: #fff;
-    box-shadow: 0 4px 24px rgba(124,106,247,0.35);
+    box-shadow: 0 4px 24px rgba(91,140,255,0.34);
   }
-  .btn-primary:hover { box-shadow: 0 8px 32px rgba(124,106,247,0.5); filter: brightness(1.1); }
+  .btn-primary:hover { box-shadow: 0 8px 32px rgba(91,140,255,0.48); filter: brightness(1.08); }
  
   .btn-outline {
     background: transparent; color: var(--text);
@@ -177,10 +318,10 @@
   .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
  
   .btn-ghost {
-    background: rgba(56,217,192,0.1); color: var(--accent2);
-    border: 1px solid rgba(56,217,192,0.25);
+    background: rgba(45,227,193,0.10); color: var(--accent2);
+    border: 1px solid rgba(45,227,193,0.25);
   }
-  .btn-ghost:hover { background: rgba(56,217,192,0.18); }
+  .btn-ghost:hover { background: rgba(45,227,193,0.18); }
  
   /* ── SECTION HEADERS ── */
   .section-wrap { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
@@ -235,7 +376,7 @@
     background: var(--card); padding: 1.4rem 1.6rem;
     transition: border-color 0.25s, transform 0.25s;
   }
-  .info-card:hover { border-color: rgba(124,106,247,0.4); transform: translateX(4px); }
+  .info-card:hover { border-color: rgba(91,140,255,0.42); transform: translateY(-2px); }
  
   .info-card h4 {
     font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700;
@@ -250,7 +391,7 @@
   .edu-score {
     display: inline-block; margin-top: 0.3rem; font-size: 0.78rem;
     padding: 0.2rem 0.6rem; border-radius: 999px;
-    background: rgba(124,106,247,0.12); color: var(--accent); border: 1px solid rgba(124,106,247,0.25);
+    background: rgba(91,140,255,0.12); color: var(--accent); border: 1px solid rgba(91,140,255,0.25);
   }
  
   /* ── SKILLS ── */
@@ -263,7 +404,7 @@
     background: var(--card); padding: 1.6rem;
     transition: border-color 0.25s, box-shadow 0.25s;
   }
-  .skill-card:hover { border-color: rgba(56,217,192,0.35); box-shadow: 0 0 30px rgba(56,217,192,0.07); }
+  .skill-card:hover { border-color: rgba(45,227,193,0.35); box-shadow: 0 0 30px rgba(45,227,193,0.07); }
  
   .skill-card-header {
     display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem;
@@ -287,7 +428,7 @@
     background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text);
     transition: background 0.2s, border-color 0.2s;
   }
-  .tag:hover { background: rgba(124,106,247,0.1); border-color: rgba(124,106,247,0.35); color: var(--accent); }
+  .tag:hover { background: rgba(91,140,255,0.10); border-color: rgba(91,140,255,0.35); color: var(--accent); }
  
   /* ── TIMELINE ── */
   #timeline .tl-wrap {
@@ -328,8 +469,8 @@
   .tl-badge {
     display: inline-flex; margin-top: 0.6rem;
     padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.72rem;
-    border: 1px solid rgba(56,217,192,0.3); color: var(--accent2);
-    background: rgba(56,217,192,0.07);
+    border: 1px solid rgba(45,227,193,0.30); color: var(--accent2);
+    background: rgba(45,227,193,0.07);
   }
  
   /* ── PROJECTS ── */
@@ -348,10 +489,10 @@
   .proj-card::before {
     content: ''; position: absolute; inset: 0;
     opacity: 0; transition: opacity 0.3s;
-    background: radial-gradient(circle at top left, rgba(124,106,247,0.08), transparent 60%);
+    background: radial-gradient(circle at top left, rgba(91,140,255,0.08), transparent 60%);
   }
   .proj-card:hover::before { opacity: 1; }
-  .proj-card:hover { border-color: rgba(124,106,247,0.4); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.35); }
+  .proj-card:hover { border-color: rgba(91,140,255,0.40); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.35); }
  
   .proj-top { display: flex; align-items: flex-start; justify-content: space-between; }
  
@@ -375,8 +516,8 @@
  
   .metric-pill {
     padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.75rem;
-    border: 1px solid rgba(247,194,106,0.25); color: var(--accent3);
-    background: rgba(247,194,106,0.07);
+    border: 1px solid rgba(255,184,107,0.25); color: var(--accent3);
+    background: rgba(255,184,107,0.07);
   }
  
   .proj-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
@@ -389,7 +530,7 @@
     background: rgba(255,255,255,0.03);
     transition: all 0.2s;
   }
-  .proj-btn:hover { background: rgba(124,106,247,0.15); border-color: var(--accent); color: var(--accent); }
+  .proj-btn:hover { background: rgba(91,140,255,0.15); border-color: var(--accent); color: var(--accent); }
   .proj-btn svg { width: 14px; height: 14px; }
  
   /* ── CERTIFICATIONS ── */
@@ -403,7 +544,7 @@
     background: var(--card); padding: 1.2rem 1.4rem;
     transition: border-color 0.25s, transform 0.25s;
   }
-  .cert-card:hover { border-color: rgba(247,194,106,0.4); transform: translateX(4px); }
+  .cert-card:hover { border-color: rgba(255,184,107,0.40); transform: translateY(-2px); }
  
   .cert-icon { font-size: 1.8rem; flex-shrink: 0; }
   .cert-name { font-size: 0.92rem; font-weight: 500; }
@@ -418,7 +559,7 @@
     background: var(--card); padding: 1.6rem;
     transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
   }
-  .strength-card:hover { border-color: rgba(56,217,192,0.35); box-shadow: 0 0 30px rgba(56,217,192,0.06); transform: translateY(-3px); }
+  .strength-card:hover { border-color: rgba(45,227,193,0.35); box-shadow: 0 0 30px rgba(45,227,193,0.06); transform: translateY(-3px); }
  
   .strength-num {
     font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800;
@@ -443,7 +584,7 @@
  
   .contact-card::before {
     content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(124,106,247,0.12), transparent 60%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(91,140,255,0.12), transparent 60%);
     pointer-events: none;
   }
  
@@ -482,9 +623,17 @@
     .tl-wrap { padding-left: 2.5rem; }
     .tl-dot { left: -2.5rem; }
   }
- 
-  .btn-ghost { font-size: 0.78rem; }
-  .btn-outline { font-size: 0.78rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .blob { animation: none !important; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .btn:hover,
+    .proj-card:hover,
+    .strength-card:hover,
+    .info-card:hover,
+    .cert-card:hover { transform: none; }
+  }
  
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 6px; }
@@ -516,7 +665,9 @@
  
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">YM</div>
+  <div class="nav-logo">
+    <img src="1CD23CS200.jpg" alt="Yukthi M" />
+  </div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -525,14 +676,25 @@
     <li><a href="#certifications">Certs</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+
+  <div class="theme-switch" aria-label="Theme">
+    <span class="theme-switch__text">Light</span>
+    <label class="theme-switch__toggle">
+      <input id="theme-toggle" class="theme-switch__input" type="checkbox" aria-label="Toggle theme" />
+      <span class="theme-switch__track" aria-hidden="true"></span>
+    </label>
+    <span class="theme-switch__text">Dark</span>
+  </div>
 </nav>
  
 <!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
-    <div class="hero-badge"><span class="dot"></span> Open to Opportunities</div>
+  <div class="hero-badge"><span class="dot"></span> Open to Internships &amp; Full‑Time Roles</div>
     <div class="avatar-wrap">
-      <div class="avatar-inner">YM</div>
+      <div class="avatar-inner">
+        <img src="1CD23CS200.jpg" alt="Yukthi M" />
+      </div>
     </div>
     <h1 class="hero-name"><span class="accent-word">Yukthi</span> M</h1>
     <p class="hero-title">
@@ -543,12 +705,19 @@
       CGPA 9.16 &mdash; Selected for Samsung PRISM.
     </p>
     <div class="hero-cta">
-      <a href="https://github.com/YukthiM" target="_blank" class="btn btn-primary">
+      <a href="https://github.com/YukthiM" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
         <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
         GitHub Profile
       </a>
-      <a href="#projects" class="btn btn-outline" onclick="event.preventDefault();document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View Projects</a>
-      <a href="mailto:yukthim.23cse@cambridge.edu.in" class="btn btn-ghost">✉️ yukthim.23cse@cambridge.edu.in</a>
+      <a href="#projects" class="btn btn-outline">View Projects</a>
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=yukthim.23cse%40cambridge.edu.in" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+          <path d="M4 4h16v16H4z" opacity="0"></path>
+          <path d="M4 6h16v12H4z"></path>
+          <path d="m4 7 8 6 8-6"></path>
+        </svg>
+        Mail Mee
+      </a>
     </div>
   </div>
 </section>
@@ -563,22 +732,23 @@
     <div class="about-grid">
       <div class="about-left reveal">
         <p>
-          I'm <strong>Yukthi M</strong>, a 3rd-year Computer Science Engineering student at Cambridge Institute of Technology, Bangalore. I specialise in <strong>Artificial Intelligence, Machine Learning,</strong> and <strong>Full-Stack Development</strong>.
+          I'm <strong>Yukthi M</strong>, a final year Computer Science Engineering student at Cambridge Institute of Technology, Bangalore. I specialise in <strong>Artificial Intelligence, Machine Learning,Deep Learning with computer vision</strong> and <strong>Full-Stack Development</strong>.
         </p>
         <p>
           My journey started in 2023 and has led me to build projects achieving up to <strong>99.12% classification accuracy</strong>, contribute to an industry-scale AI project under <strong>Samsung PRISM</strong>, and consistently maintain a CGPA of <strong>9.16</strong>.
         </p>
         <p>
-          I love bridging the gap between cutting-edge ML research and real-world applications &mdash; from detecting driver fatigue with CNNs to building portfolio verification platforms.
+          I love bridging the gap between cutting-edge ML research and real-world applications &mdash; from detecting driver fatigue with CNNs to building portfolio verification platforms. I love building full stack complete projects.
         </p>
         <div class="achieve-row">
           <div class="achieve-pill"><span class="a-icon">🎯</span> CGPA <span class="a-val">9.16</span></div>
           <div class="achieve-pill"><span class="a-icon">🏆</span> Samsung <span class="a-val">PRISM</span></div>
           <div class="achieve-pill"><span class="a-icon">🧠</span> ML Accuracy <span class="a-val">99.12%</span></div>
           <div class="achieve-pill"><span class="a-icon">🚗</span> Drowsiness Det. <span class="a-val">95.6%</span></div>
+          <div class="achieve-pill"><span class="a-icon">🚗</span> GIG workers platform <span class="a-val">with payment pipeline</span></div>
         </div>
         <div style="margin-top:2rem;">
-          <a href="https://github.com/YukthiM" target="_blank" class="btn btn-primary" style="display:inline-flex;">
+          <a href="https://github.com/YukthiM" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="display:inline-flex;">
             <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
             github.com/YukthiM
           </a>
@@ -586,7 +756,7 @@
       </div>
       <div class="about-right reveal">
         <div class="info-card">
-          <h4>🎓 Education</h4>
+          <h4>Education</h4>
           <div class="edu-item">
             <div class="edu-deg">B.E. Computer Science Engineering</div>
             <div class="edu-school">Cambridge Institute of Technology, Bangalore &nbsp;·&nbsp; 2023–2027</div>
@@ -604,7 +774,7 @@
           </div>
         </div>
         <div class="info-card">
-          <h4>📍 Location &amp; Status</h4>
+          <h4>Location &amp; Status</h4>
           <p style="font-size:0.9rem; color:var(--muted);">Bangalore, Karnataka, India<br/>
           <span style="color:var(--accent2); font-weight:500;">Available for internships &amp; collaborations</span></p>
         </div>
@@ -623,7 +793,7 @@
     <div class="skills-grid">
       <div class="skill-card reveal">
         <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(124,106,247,0.12);">💻</div>
+          <div class="skill-icon" style="background:rgba(91,140,255,0.12);">💻</div>
           <h4>Programming Languages</h4>
         </div>
         <div class="skill-tags">
@@ -634,7 +804,7 @@
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(56,217,192,0.12);">🌐</div>
+          <div class="skill-icon" style="background:rgba(45,227,193,0.12);">🌐</div>
           <h4>Web Technologies</h4>
         </div>
         <div class="skill-tags">
@@ -648,7 +818,7 @@
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(247,194,106,0.12);">🗄️</div>
+          <div class="skill-icon" style="background:rgba(255,184,107,0.12);">🗄️</div>
           <h4>Databases</h4>
         </div>
         <div class="skill-tags">
@@ -658,7 +828,7 @@
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(247,106,138,0.12);">🤖</div>
+          <div class="skill-icon" style="background:rgba(255,92,147,0.12);">🤖</div>
           <h4>Machine Learning</h4>
         </div>
         <div class="skill-tags">
@@ -671,7 +841,7 @@
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(124,106,247,0.12);">📚</div>
+          <div class="skill-icon" style="background:rgba(91,140,255,0.12);">📚</div>
           <h4>Libraries &amp; Frameworks</h4>
         </div>
         <div class="skill-tags">
@@ -684,7 +854,7 @@
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(56,217,192,0.12);">🔧</div>
+          <div class="skill-icon" style="background:rgba(45,227,193,0.12);">🔧</div>
           <h4>Tools &amp; Concepts</h4>
         </div>
         <div class="skill-tags">
@@ -716,7 +886,7 @@
       <div class="tl-item reveal">
         <div class="tl-dot"></div>
         <div class="tl-year">2023</div>
-        <div class="tl-title">🚀 Beginning of the Journey</div>
+        <div class="tl-title">Beginning of the Journey</div>
         <div class="tl-desc">Enrolled in B.E. Computer Science Engineering at Cambridge Institute of Technology, Bangalore. Started building a strong foundation in DSA, OOP, DBMS, and core CS principles.</div>
         <span class="tl-badge">Academic Start</span>
       </div>
@@ -724,7 +894,7 @@
       <div class="tl-item reveal">
         <div class="tl-dot"></div>
         <div class="tl-year">2024</div>
-        <div class="tl-title">📖 Deepening Expertise</div>
+        <div class="tl-title">Deepening Expertise</div>
         <div class="tl-desc">Explored Machine Learning and Deep Learning. Gained hands-on experience with Python, TensorFlow, and OpenCV. Completed certifications in ML, Deep Learning, NLP, and Cyber Security.</div>
         <span class="tl-badge">Skill Building</span>
       </div>
@@ -732,7 +902,7 @@
       <div class="tl-item reveal">
         <div class="tl-dot"></div>
         <div class="tl-year">2025</div>
-        <div class="tl-title">🧠 AI-Driven Driver Drowsiness Detection</div>
+        <div class="tl-title">AI-Driven Driver Drowsiness Detection</div>
         <div class="tl-desc">Developed a real-time fatigue detection system using CNN, trained on 84,984 images from the MRL dataset. Achieved 95.6% accuracy with an integrated alert mechanism.</div>
         <span class="tl-badge">ML Project</span>
       </div>
@@ -740,7 +910,7 @@
       <div class="tl-item reveal">
         <div class="tl-dot"></div>
         <div class="tl-year">2025</div>
-        <div class="tl-title">🔬 Breast Cancer Detection</div>
+        <div class="tl-title">Breast Cancer Detection</div>
         <div class="tl-desc">Built ML classification models on the Wisconsin dataset. Improved accuracy from 98.2% to 99.12% through feature engineering and model evaluation. Enhanced recall by ~2%.</div>
         <span class="tl-badge">ML Project</span>
       </div>
@@ -748,7 +918,7 @@
       <div class="tl-item reveal">
         <div class="tl-dot"></div>
         <div class="tl-year">2026</div>
-        <div class="tl-title">🏭 Samsung PRISM Industry Collaboration</div>
+        <div class="tl-title">Samsung PRISM Industry Collaboration</div>
         <div class="tl-desc">Selected for Samsung PRISM — contributing to an industry-scale AI project. Built reusable frontend modules using React.js and Next.js, and designed dashboard components in an agile environment.</div>
         <span class="tl-badge">Industry Program</span>
       </div>
@@ -756,7 +926,7 @@
       <div class="tl-item reveal">
         <div class="tl-dot"></div>
         <div class="tl-year">2026</div>
-        <div class="tl-title">🔐 Gig Workers Portfolio Verification System</div>
+        <div class="tl-title">Gig Workers Portfolio Verification System</div>
         <div class="tl-desc">Developed a full-stack portfolio verification platform with secure auth, role-based access, and admin dashboards. Enhances trust and transparency in gig-worker ecosystems.</div>
         <span class="tl-badge">Full-Stack Project</span>
       </div>
@@ -764,7 +934,7 @@
       <div class="tl-item reveal">
         <div class="tl-dot"></div>
         <div class="tl-year">2027</div>
-        <div class="tl-title">🎓 Graduation &amp; Beyond</div>
+        <div class="tl-title">Graduation &amp; Beyond</div>
         <div class="tl-desc">Expected graduation with B.E. in Computer Science Engineering. Ready to contribute to impactful AI and software engineering roles in the industry.</div>
         <span class="tl-badge">Upcoming</span>
       </div>
@@ -781,10 +951,12 @@
     <div class="section-label">Work</div>
     <h2 class="section-title">Featured <em>Projects</em></h2>
     <div class="projects-grid">
+
+   
  
       <div class="proj-card reveal">
         <div class="proj-top">
-          <div class="proj-icon" style="background:rgba(124,106,247,0.12);">🚗</div>
+          <div class="proj-icon" style="background:rgba(91,140,255,0.12);">🚗</div>
           <span class="proj-year">2025</span>
         </div>
         <div class="proj-title">AI-Driven Driver Drowsiness Detection</div>
@@ -795,38 +967,30 @@
           <span class="metric-pill">TensorFlow</span>
           <span class="metric-pill">OpenCV</span>
         </div>
-        <div class="proj-links">
-          <a href="https://github.com/YukthiM/DFMS" target="_blank" class="proj-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            View on GitHub
-          </a>
-        </div>
+       
       </div>
  
       <div class="proj-card reveal">
         <div class="proj-top">
-          <div class="proj-icon" style="background:rgba(247,106,138,0.12);">🔬</div>
+          <div class="proj-icon" style="background:rgba(255,92,147,0.12);">🔬</div>
           <span class="proj-year">2025</span>
         </div>
         <div class="proj-title">Breast Cancer Detection</div>
         <div class="proj-desc">ML models for binary classification using the Wisconsin dataset. Applied feature engineering, normalization and algorithm comparison to push accuracy from 98.2% to 99.12%.</div>
         <div class="proj-metrics">
           <span class="metric-pill">99.12% Accuracy</span>
+          <span class="metric-pill">98.2% Recall</span>
           <span class="metric-pill">Scikit-learn</span>
           <span class="metric-pill">Random Forest</span>
           <span class="metric-pill">SVM</span>
+          <span class="metric-pill">Ensemble Model</span>
         </div>
-        <div class="proj-links">
-          <a href="https://github.com/YukthiM/bcd" target="_blank" class="proj-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            View on GitHub
-          </a>
-        </div>
+       
       </div>
  
       <div class="proj-card reveal">
         <div class="proj-top">
-          <div class="proj-icon" style="background:rgba(56,217,192,0.12);">🏭</div>
+          <div class="proj-icon" style="background:rgba(45,227,193,0.12);">🏭</div>
           <span class="proj-year">2026</span>
         </div>
         <div class="proj-title">Samsung PRISM Worklet</div>
@@ -836,17 +1000,12 @@
           <span class="metric-pill">Next.js</span>
           <span class="metric-pill">Industry Scale</span>
         </div>
-        <div class="proj-links">
-          <a href="https://github.com/YukthiM" target="_blank" class="proj-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            GitHub Profile
-          </a>
-        </div>
+       
       </div>
  
       <div class="proj-card reveal">
         <div class="proj-top">
-          <div class="proj-icon" style="background:rgba(247,194,106,0.12);">🔐</div>
+          <div class="proj-icon" style="background:rgba(255,184,107,0.12);">🔐</div>
           <span class="proj-year">2026</span>
         </div>
         <div class="proj-title">Gig Workers Portfolio Verification System</div>
@@ -856,13 +1015,39 @@
           <span class="metric-pill">Auth &amp; RBAC</span>
           <span class="metric-pill">Dashboard</span>
         </div>
-        <div class="proj-links">
-          <a href="https://github.com/YukthiM" target="_blank" class="proj-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            GitHub Profile
-          </a>
+
+      </div>
+
+         <div class="proj-card reveal">
+        <div class="proj-top">
+          <div class="proj-icon" style="background:rgba(45,227,193,0.12);">🤖</div>
+          <span class="proj-year">2026–ongoing</span>
+        </div>
+        <div class="proj-title">AI driven Inventory agent</div>
+        <div class="proj-desc">NEXUS: a full-stack research system comparing a rule-based agent vs an LSTM-powered ML agent for autonomous inventory decisions. Includes KPI dashboards, inventory + orders, demand forecasting, agent decision logs, alerts, and research comparisons.</div>
+        <div class="proj-metrics">
+          <span class="metric-pill">Flask</span>
+          <span class="metric-pill">WebSockets</span>
+          <span class="metric-pill">MySQL</span>
+          <span class="metric-pill">React</span>
+          <span class="metric-pill">LSTM Forecasting</span>
         </div>
       </div>
+
+        <div class="proj-card reveal">
+          <div class="proj-top">
+            <div class="proj-icon" style="background:rgba(255,184,107,0.12);">🏫</div>
+            <span class="proj-year">2026</span>
+          </div>
+          <div class="proj-title">Student Attendance management system</div>
+          <div class="proj-desc">Full-stack attendance tracking system with role-based flows: students can download their attendance report, teachers can download class-wise reports, and admins have full access to manage attendance records.</div>
+          <div class="proj-metrics">
+            <span class="metric-pill">React</span>
+            <span class="metric-pill">Node.js</span>
+            <span class="metric-pill">php </span>
+            <span class="metric-pill">Reports</span>
+          </div>
+        </div>
  
     </div>
   </div>
@@ -887,6 +1072,10 @@
       <div class="cert-card reveal">
         <div class="cert-icon">📘</div>
         <div class="cert-name">Infosys Springboard Certifications</div>
+      </div>
+            <div class="cert-card reveal">
+        <div class="cert-icon">📊</div>
+        <div class="cert-name">HakerRank SQL certificate</div>
       </div>
     </div>
   </div>
@@ -924,19 +1113,26 @@
 <section id="contact">
   <div class="contact-card">
     <h2>Let's Build Something Together</h2>
-    <p>Open to internships, collaborations, and full-time opportunities. Reach out via GitHub or LinkedIn.</p>
+    <p>Open to internships, collaborations, and full-time opportunities. Reach out via GitHub or email.</p>
     <div class="contact-links">
-      <a href="https://github.com/YukthiM" target="_blank" class="btn btn-primary">
+      <a href="https://github.com/YukthiM" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
         <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
         GitHub
       </a>
-      <a href="mailto:yukthim.23cse@cambridge.edu.in" class="btn btn-outline">✉️ yukthim.23cse@cambridge.edu.in</a>
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=yukthim.23cse%40cambridge.edu.in" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+          <path d="M4 4h16v16H4z" opacity="0"></path>
+          <path d="M4 6h16v12H4z"></path>
+          <path d="m4 7 8 6 8-6"></path>
+        </svg>
+        yukthim.23cse@cambridge.edu.in
+      </a>
     </div>
   </div>
 </section>
  
 <footer>
-  <p>Designed &amp; built by <strong>Yukthi M</strong> &nbsp;·&nbsp; Bangalore, Karnataka &nbsp;·&nbsp; 2025</p>
+  <p>Designed &amp; built by <strong>Yukthi M</strong> &nbsp;·&nbsp; Bangalore, Karnataka &nbsp;·&nbsp; 2026</p>
 </footer>
  
 <script>
@@ -964,6 +1160,43 @@
       a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent2)' : '';
     });
   });
+
+  // Theme toggle (Light / Dark)
+  const themeToggle = document.getElementById('theme-toggle');
+  const normalizeTheme = (value) => (value === 'dark' ? 'dark' : 'light');
+
+  const applyTheme = (theme, persist = true) => {
+    const normalized = normalizeTheme(theme);
+    document.documentElement.dataset.theme = normalized;
+    if (persist) {
+      try { localStorage.setItem('theme', normalized); } catch { /* ignore */ }
+    }
+    if (themeToggle) {
+      themeToggle.checked = normalized === 'dark';
+      themeToggle.setAttribute('aria-label', normalized === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+  };
+
+  if (themeToggle) {
+    // Sync the UI to the theme chosen in the early <head> script.
+    applyTheme(document.documentElement.dataset.theme, false);
+
+    themeToggle.addEventListener('change', () => {
+      applyTheme(themeToggle.checked ? 'dark' : 'light', true);
+    });
+
+    // If user never chose a theme, follow system changes.
+    try {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      mq.addEventListener('change', (e) => {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'light' || stored === 'dark') return;
+        applyTheme(e.matches ? 'dark' : 'light', false);
+      });
+    } catch {
+      // ignore
+    }
+  }
 </script>
 </body>
 </html>
